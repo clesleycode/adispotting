@@ -14,7 +14,7 @@ class ADISpotting(object):
         self.users = {}
 
     def add_points(self, user, points):
-        self.users[user] = self.users[user] += points
+        self.users[user] = self.users[user] + points
 
 
 def handle_command(command, channel):

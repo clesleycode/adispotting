@@ -10,7 +10,7 @@ slack_client = SlackClient(os.environ.get("SLACK_BOT_TOKEN"))
 mems = slack_client.api_call(
   "channels.list",
    exclude_archived=1
-)['channels'][70]['members']
+)['channels'][40]['members']
 
 class ADISpotting:
     def __init__(self):
@@ -28,7 +28,7 @@ class ADISpotting:
     def get_points(self, user):
         return(self.users[user])
 
-
+# need to add: what if a new user joins the channel?
 adispot = ADISpotting()
 for i in mems:
     adispot.add_user(i)
@@ -43,7 +43,7 @@ def parse_slack_output(slack_rtm_output):
             elif output and 'subtype' in output:
                 print(output)
                 adispot.add_points(output['file']['user'], 5) 
-                slack_client.api_call("chat.postMessage", channel="C57D2GXM4", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)
+                slack_client.api_call("chat.postMessage", channel="C55UAGM3N", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)
 
 
 

@@ -6,11 +6,11 @@ BOT_ID = os.environ.get("BOT_ID")
 AT_BOT = "<@" + BOT_ID + ">"
 
 slack_client = SlackClient(os.environ.get("SLACK_BOT_TOKEN"))
+# hard coded for now, but NEEDs to be fixed
 mems = slack_client.api_call(
   "channels.list",
    exclude_archived=1
-)['channels'][71]['members']
-
+)['channels'][70]['members']
 
 class ADISpotting:
     def __init__(self):
@@ -39,10 +39,12 @@ def parse_slack_output(slack_rtm_output):
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output and AT_BOT in output['text']:
-                slack_client.api_call("chat.postMessage", text="What do you want?", channel= output['channel'], as_user=True)
-            elif output and 'user_id' in output and output['type'] == 'file_shared':
-                adispot.add_points(output['user_id'], 5)
-                slack_client.api_call("chat.postMessage", channel="C57D2GXM4", text=output['user_id'] + " now has " + str(adispot.get_points(output['user_id'])) + " points!", as_user=True)
+                slack_client.api_call("chat.postMessage", text="What do you want?", channel=output['channel'], as_user=True)
+            elif output and 'subtype' in output:
+                print(output)
+                adispot.add_points(output['file']['user'], 5) 
+                slack_client.api_call("chat.postMessage", channel="C57D2GXM4", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)
+
 
 
 if __name__ == "__main__":
@@ -55,4 +57,4 @@ if __name__ == "__main__":
     else:
         print("Connection failed. Invalid slack token or bot ID")
 
-
+ #output['text'].split(AT_BOT)[1].strip().lower()

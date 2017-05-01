@@ -40,7 +40,7 @@ def parse_slack_output(slack_rtm_output):
         for output in output_list:
             if output and 'text' in output and AT_BOT in output['text']:
                 slack_client.api_call("chat.postMessage", text="What do you want?", channel=output['channel'], as_user=True)
-            elif output and 'subtype' in output:
+            elif output and 'subtype' in output and 'file' in output:
                 print(output)
                 adispot.add_points(output['file']['user'], 5) 
                 slack_client.api_call("chat.postMessage", channel="C55UAGM3N", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)

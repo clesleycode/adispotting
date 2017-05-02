@@ -6,12 +6,13 @@ BOT_ID = os.environ.get("BOT_ID")
 AT_BOT = "<@" + BOT_ID + ">"
 
 slack_client = SlackClient(os.environ.get("SLACK_BOT_TOKEN"))
-# hard coded for now, but NEEDs to be fixed
+# hard coded for now, but NEEDs to be fixed - every time a new channel is added, everything dies
 mems = slack_client.api_call(
   "channels.list",
    exclude_archived=1
 )['channels'][40]['members']
 
+# what keeps track of the scores - weekly reset needs to be added
 class ADISpotting:
     def __init__(self):
         self.winner = "U56FWRC3D"
@@ -34,15 +35,16 @@ for i in mems:
     adispot.add_user(i)
 
 
+# needs to be cleaned 
 def parse_slack_output(slack_rtm_output):
     output_list = slack_rtm_output
     if output_list and len(output_list) > 0:
         for output in output_list:
             if output and 'text' in output and AT_BOT in output['text']:
-                slack_client.api_call("chat.postMessage", text="What do you want?", channel=output['channel'], as_user=True)
+                slack_client.api_call("chat.postMessage", text="What do you want?", channel=output['channel'], as_user=True) # default message - need to add parsing so bot adds points
             elif output and 'subtype' in output and 'file' in output:
-                print(output)
                 adispot.add_points(output['file']['user'], 5) 
+                # channel is hard coded for now -- might fix but not priority
                 slack_client.api_call("chat.postMessage", channel="C55UAGM3N", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)
 
 

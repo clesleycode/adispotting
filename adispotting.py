@@ -60,6 +60,7 @@ def parse_slack_output(slack_rtm_output):
                 slack_client.api_call("chat.postMessage", channel="C55UAGM3N", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)
 
 
+
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1
     if slack_client.rtm_connect():

@@ -2,7 +2,6 @@ import os
 import time
 import sched
 from slackclient import SlackClient
-import requests
 
 BOT_ID = os.environ.get("BOT_ID")
 AT_BOT = "<@" + BOT_ID + ">"

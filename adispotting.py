@@ -12,7 +12,6 @@ mems = slack_client.api_call(
    exclude_archived=1
 )['channels']
 
-
 # finds the correct channel (ADISpotting)
 ind = 0
 for i in mems: 

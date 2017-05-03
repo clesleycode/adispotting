@@ -57,6 +57,8 @@ def parse_slack_output(slack_rtm_output):
                 adispot.add_points(output['file']['user'], 5) 
                 # channel is hard coded for now -- might fix but not priority
                 slack_client.api_call("chat.postMessage", channel="C55UAGM3N", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)
+            else:
+                slack_client.api_call("users.list")
 
 
 

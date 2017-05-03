@@ -1,6 +1,8 @@
 import os
 import time
+import sched
 from slackclient import SlackClient
+import requests
 
 BOT_ID = os.environ.get("BOT_ID")
 AT_BOT = "<@" + BOT_ID + ">"
@@ -57,14 +59,20 @@ def parse_slack_output(slack_rtm_output):
                 # channel is hard coded for now -- might fix but not priority
                 slack_client.api_call("chat.postMessage", channel="C55UAGM3N", text=output['username'] + " now has " + str(adispot.get_points(output['user'])) + " points!", as_user=True)
 
-
+""" makes get request every 5 minutes"""
+def keep_run(sc):
+    requests.get("https://salty-stream-23282.herokuapp.com/")
+    s.enter(300, 1, keep_run, (sc,))
 
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1
+    s = sched.scheduler(time.time, time.sleep)
     if slack_client.rtm_connect():
         print("ADISpotting connected and running!")
         while True:
             parse_slack_output(slack_client.rtm_read())
+            s.enter(300, 1, keep_run, (s,)) # makes get request every 5 minutes
+            s.run()
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid slack token or bot ID")
